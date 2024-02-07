@@ -3,18 +3,21 @@ provider "aws" {
 }
 
 resource "aws_instance" "aurora" {
-  ami           = "ami-0947d2ba12ee1ff75"  # Ubuntu 22.04 LTS AMI ID
+  ami           = "ami-0c7217cdde317cfec"  # Ubuntu 22.04 LTS AMI ID
   instance_type = "t3a.small"              
 
   root_block_device {
     volume_size = 128  # Size of the root block device in gigabytes
   }
 
-  key_name = "thinkpad23" 
+  key_name = "thinkpad23"
+  security_groups = [aws_security_group.aurora_sg.name]
 
   tags = {
     Name = "aurora"
   }
+
+  depends_on = [aws_security_group.aurora_sg]
 }
 
 data "aws_eip" "aurora_eip" {
@@ -37,4 +40,16 @@ resource "null_resource" "write_ssh_to_file" {
   }
 
   depends_on = [aws_instance.aurora]
+}
+
+resource "aws_security_group" "aurora_sg" {
+  name      = "aurora-security-group"
+  description = "Allow inbound SSH connections from my public IP"
+
+  ingress {
+    from_port   = 22 
+    to_port     = 22 
+    protocol    = "tcp"
+    cidr_blocks = ["${var.local_network_public_ip}/32"] 
+  }
 }
