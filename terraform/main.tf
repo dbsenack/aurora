@@ -19,7 +19,7 @@ resource "aws_instance" "aurora" {
 
 resource "aws_eip" "aurora_eip" {
   instance = aws_instance.aurora.id
-  vpc = true
+  domain = "vpc"
 }
 
 output "ssh_connection" {
@@ -28,6 +28,8 @@ output "ssh_connection" {
 
 resource "null_resource" "write_ssh_to_file" {
   provisioner "local-exec" {
-    command = "echo '${self.output.ssh_connection.value}' > ../ssh_connection_info.txt" 
+    command = "echo '${aws_instance.aurora.public_ip}' > ../ssh_connection_info.txt" 
   }
+
+  depends_on = [aws_instance.aurora]
 }

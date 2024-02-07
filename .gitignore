@@ -1,1 +1,3 @@
 ssh_connection_info.txt
+terraform/.terraform/
+terraform/.terraform.lock.hcl
