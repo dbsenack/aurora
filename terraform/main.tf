@@ -17,8 +17,13 @@ resource "aws_instance" "aurora" {
   }
 }
 
+resource "aws_eip" "aurora_eip" {
+  instance = aws_instance.aurora.id
+  vpc = true
+}
+
 output "ssh_connection" {
-  value = "ssh -i ~/.keys/Thinkpad2024.pem ubuntu@${aws_instance.aurora.public_ip}"
+  value = "ssh -i ~/.keys/Thinkpad2024.pem ubuntu@${aws_eip.aurora_eip.public_ip}"
 }
 
 resource "null_resource" "write_ssh_to_file" {
