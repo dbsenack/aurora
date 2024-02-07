@@ -2,7 +2,7 @@ provider "aws" {
   region = "us-east-1"  # Change to your desired AWS region
 }
 
-resource "aws_instance" "example" {
+resource "aws_instance" "aurora" {
   ami           = "ami-0947d2ba12ee1ff75"  # Ubuntu 22.04 LTS AMI ID
   instance_type = "t3a.small"              
 
@@ -17,3 +17,6 @@ resource "aws_instance" "example" {
   }
 }
 
+output "ssh_connection" {
+  value = "ssh -i ~/.keys/Thinkpad2024.pem ubuntu@${aws_instance.aurora.public_ip}"
+}
