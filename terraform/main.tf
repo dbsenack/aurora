@@ -20,3 +20,9 @@ resource "aws_instance" "aurora" {
 output "ssh_connection" {
   value = "ssh -i ~/.keys/Thinkpad2024.pem ubuntu@${aws_instance.aurora.public_ip}"
 }
+
+resource "null_resource" "write_ssh_to_file" {
+  provisioner "local-exec" {
+    command = "echo '${self.output.ssh_connection.value}' > ../ssh_connection_info.txt" 
+  }
+}
