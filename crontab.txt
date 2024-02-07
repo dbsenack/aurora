@@ -1,2 +1,2 @@
-0 9 * * 1-5 terraform -chdir=terraform -auto-approve apply
-0 23 * * 1-5 terraform -chdir=terraform -auto-approve destroy
+0 9 * * 1-5 terraform -chdir=/home/david/Projects/infrastructure/aurora/terraform -auto-approve apply
+0 23 * * 1-5 terraform -chdir=/home/david/Projects/infrastructure/aurora/terraform -auto-approve destroy

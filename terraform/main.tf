@@ -10,20 +10,25 @@ resource "aws_instance" "aurora" {
     volume_size = 128  # Size of the root block device in gigabytes
   }
 
-  key_name = "Thinkpad2024.pem" 
+  key_name = "thinkpad23" 
 
   tags = {
     Name = "aurora"
   }
 }
 
-resource "aws_eip" "aurora_eip" {
-  instance = aws_instance.aurora.id
-  domain = "vpc"
+data "aws_eip" "aurora_eip" {
+  public_ip = var.aurora_eip
+}
+
+resource "aws_eip_association" "aurora_eip_association" {
+  instance_id = aws_instance.aurora.id
+  allocation_id = data.aws_eip.aurora_eip.id
+  
 }
 
 output "ssh_connection" {
-  value = "ssh -i ~/.keys/Thinkpad2024.pem ubuntu@${aws_eip.aurora_eip.public_ip}"
+  value = "ssh -i ~/.keys/thinkpad23.pem ubuntu@${data.aws_eip.aurora_eip.public_ip}"
 }
 
 resource "null_resource" "write_ssh_to_file" {
